@@ -1,0 +1,136 @@
+import 'package:flutter/material.dart';
+import 'package:karuteapp/screens/consent.dart';
+import 'package:karuteapp/screens/home.dart';
+
+class DrawerMenu {
+  DrawerMenu( this.label, this.icon, this.selectedIcon, {this.screen});
+
+  final String label;
+  final Widget icon;
+  final Widget selectedIcon;
+  Widget?screen;
+}
+
+List<DrawerMenu> destinations = <DrawerMenu>[
+  DrawerMenu(
+    'Homepage', Icon(Icons.home_outlined), Icon( Icons.home),screen: Home()),
+  DrawerMenu(
+    'Profile & Sharing Consent', Icon(Icons.account_circle_outlined), Icon( Icons.account_circle), screen: ProfileConsent()),
+  DrawerMenu(
+    'My Family', Icon(Icons.group), Icon( Icons.group)),
+  DrawerMenu(
+    'Allergy', Icon(Icons.warning_amber_outlined), Icon( Icons.warning_amber)),
+  DrawerMenu(
+    'Medications', Icon(Icons.medication), Icon( Icons.medication)),
+  DrawerMenu(
+    'Vaccines', Icon(Icons.vaccines_outlined), Icon( Icons.vaccines)),
+  DrawerMenu(
+    'Appointments', Icon(Icons.schedule_outlined), Icon( Icons.schedule)),
+  DrawerMenu(
+    'Health Management', Icon(Icons.health_and_safety_outlined), Icon( Icons.health_and_safety)),
+  DrawerMenu(
+    'Health Programme', Icon(Icons.healing_outlined), Icon( Icons.healing)),
+  DrawerMenu(
+    'Child Growth Record', Icon(Icons.child_care_outlined), Icon( Icons.child_care)),
+  DrawerMenu(
+    'Doctor Search', Icon(Icons.person_search_outlined), Icon( Icons.person_search)),
+  DrawerMenu(
+    'Health News', Icon(Icons.campaign_outlined), Icon( Icons.campaign)),
+];
+
+List<DrawerMenu> options = <DrawerMenu>[
+  DrawerMenu(
+    'Settings', Icon(Icons.settings_outlined), Icon( Icons.settings)),
+  DrawerMenu(
+    'Language', Icon(Icons.language_outlined), Icon( Icons.language)),
+  DrawerMenu(
+    'Smart Tips', Icon(Icons.lightbulb_outline), Icon( Icons.lightbulb)),
+  DrawerMenu(
+    'Information Center', Icon(Icons.info_outline), Icon( Icons.info)),
+  DrawerMenu(
+    'Tutorials', Icon(Icons.school_outlined), Icon( Icons.school)),
+  DrawerMenu(
+    'FAQs', Icon(Icons.quiz_outlined), Icon( Icons.quiz)),
+  DrawerMenu(
+    'Contact Us', Icon(Icons.contact_phone_outlined), Icon( Icons.contact_phone)),
+  DrawerMenu(
+    'Terms of use', Icon(Icons.report_problem_outlined), Icon( Icons.report_problem)),
+  DrawerMenu(
+    'Logout', Icon(Icons.logout_outlined), Icon( Icons.logout)),
+];
+
+class Navbar extends StatefulWidget {
+  const Navbar({super.key});
+
+  @override
+  State<Navbar> createState() => _NavbarState();
+}
+
+class _NavbarState extends State<Navbar> {
+  // GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  int screenIndex = 0;
+
+  void handleIndexChanged(int index){
+    setState(() {
+      screenIndex = index;
+      Navigator.pop(context);
+
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => destinations[index].screen!,
+      //   ),
+      // );
+
+    });
+  }
+  void open(){
+    scaffoldKey.currentState!.openDrawer();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return NavigationDrawer(
+        indicatorShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0))
+        ),
+        onDestinationSelected: handleIndexChanged,
+        selectedIndex: screenIndex,
+        children: <Widget>[
+          const SizedBox(
+            child: Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Row(
+                children: <Widget>[
+                  CircleAvatar(
+                    radius: 25,
+                    child: Icon(Icons.account_circle_outlined, size:30, color: Colors.black45,),
+                  ),
+                  SizedBox(width: 20),
+                  Text("Kundu, Sourav", style: TextStyle(fontSize:24))
+                ],
+              ),
+            )
+          ),
+          const Divider(),
+          ...destinations.map(
+            (DrawerMenu destination) {
+              return NavigationDrawerDestination(
+                label: Text(destination.label),
+                icon: destination.icon,
+                selectedIcon: destination.selectedIcon,
+              );
+            },
+          ),
+          const Divider(),
+          ...options.map(
+            (DrawerMenu destination) {
+              return NavigationDrawerDestination(
+                label: Text(destination.label),
+                icon: destination.icon,
+                selectedIcon: destination.selectedIcon,
+              );
+            },
+          ),
+        ],
+      );
+  }
+}
